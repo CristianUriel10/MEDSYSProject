@@ -89,7 +89,7 @@ const Main: React.FC = () => {
                 collapsed={openSectionId !== item.id}
                 style={{marginLeft: 50}}>
                 {loading ? (
-                  <Text>Cargando....</Text>
+                  <Text>Loading....</Text>
                 ) : (
                   albumByUSer?.map((item: Album) => (
                     <TouchableOpacity

@@ -16,12 +16,17 @@ import {
 } from '../../redux/Album/album.actions';
 
 // Selectors
-import {getAlbumPhotos, getAllPhotos} from '../../redux/Album/album.selectors';
+import {
+  getAlbumPhotos,
+  getAllPhotos,
+  getLoadingStatus,
+} from '../../redux/Album/album.selectors';
 
 const Gallery: React.FC = ({id, setActiveGallery}) => {
   const dispatch = useDispatch();
   const albumPhotos = useSelector(getAlbumPhotos);
   const allPhotos = useSelector(getAllPhotos);
+  const loading = useSelector(getLoadingStatus);
 
   const [allPhotosActive, setAllPhotosActive] = useState(false);
 
@@ -88,12 +93,13 @@ const Gallery: React.FC = ({id, setActiveGallery}) => {
             style={styles.image2}
             source={{
               uri: allPhotosActive
-                ? 'https://pngimg.com/uploads/star/star_PNG1595.png' : 'https://i.pinimg.com/originals/f0/bb/0d/f0bb0d3f884d8a915e2103648e1a1a8a.png',
+                ? 'https://pngimg.com/uploads/star/star_PNG1595.png'
+                : 'https://i.pinimg.com/originals/f0/bb/0d/f0bb0d3f884d8a915e2103648e1a1a8a.png',
             }}
           />
         </TouchableOpacity>
       </View>
-      <ScrollView>{rows}</ScrollView>
+      {loading ? <Text style={{textAlign: 'center', fontSize: 30}}>Loading........</Text> : <ScrollView>{rows}</ScrollView>}
     </View>
   );
 };

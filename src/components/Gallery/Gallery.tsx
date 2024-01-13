@@ -44,7 +44,7 @@ const Gallery: React.FC = ({id, title, setActiveGallery}) => {
             .map((source, index) => (
               <Image
                 key={index}
-                source={{uri: source?.url}}
+                source={{uri: source?.thumbnailUrl}}
                 style={styles.image}
               />
             ))
@@ -53,7 +53,7 @@ const Gallery: React.FC = ({id, title, setActiveGallery}) => {
             .map((source, index) => (
               <Image
                 key={index}
-                source={{uri: source?.url}}
+                source={{uri: source?.thumbnailUrl}}
                 style={styles.image}
               />
             ))}

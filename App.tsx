@@ -2,13 +2,13 @@ import {createStore, applyMiddleware, compose} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { Text } from 'react-native';
 import logger from 'redux-logger';
-import { reducer } from './src/redux/Store';
+import Reducers from './src/redux/Reducers';
 import { registerScreens } from './src/components/Screens';
 import {Provider} from 'react-redux';
 
 function configureStore(initialState) {
   const enhancer = compose(applyMiddleware(thunkMiddleware, logger));
-  return createStore(reducer, initialState, enhancer);
+  return createStore(Reducers, initialState, enhancer);
 }
 
 const store = configureStore({});

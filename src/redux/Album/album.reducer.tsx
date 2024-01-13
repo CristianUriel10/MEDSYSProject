@@ -5,7 +5,13 @@ import {
   GET_USERS_SUCCESS,
   GET_ALBUM_BY_USERS_LOADING,
   GET_ALBUM_BY_USERS_ERROR,
-  GET_ALBUM_BY_USERS_SUCCESS
+  GET_ALBUM_BY_USERS_SUCCESS,
+  GET_ALBUM_PHOTOS_ERROR,
+  GET_ALBUM_PHOTOS_LOADING,
+  GET_ALBUM_PHOTOS_SUCCESS,
+  GET_ALL_PHOTOS_ERROR,
+  GET_ALL_PHOTOS_LOADING,
+  GET_ALL_PHOTOS_SUCCESS,
 } from './album.types';
 
 /**
@@ -19,7 +25,9 @@ const INITIAL_STATE = {
     success: '',
   },
   listUsers: null,
-  albumByUser: null
+  albumByUser: null,
+  albumPhotos: null,
+  allPhotos: null,
 };
 
 /**
@@ -87,6 +95,64 @@ const albumReducer = (state = INITIAL_STATE, {type, payload}) => {
           success: '',
         },
         albumByUser: payload,
+      };
+    case GET_ALBUM_PHOTOS_LOADING: // when the update endpoint is being called.
+      return {
+        ...state,
+        apiActions: {
+          loading: true,
+          error: '',
+          success: '',
+        },
+      };
+
+    case GET_ALBUM_PHOTOS_ERROR: // when the update endpoint returns an error.
+      return {
+        ...state,
+        apiActions: {
+          loading: false,
+          error: payload,
+          success: '',
+        },
+      };
+    case GET_ALBUM_PHOTOS_SUCCESS:
+      return {
+        ...state,
+        apiActions: {
+          loading: false,
+          error: '',
+          success: '',
+        },
+        albumPhotos: payload,
+      };
+    case GET_ALL_PHOTOS_LOADING: // when the update endpoint is being called.
+      return {
+        ...state,
+        apiActions: {
+          loading: true,
+          error: '',
+          success: '',
+        },
+      };
+
+    case GET_ALL_PHOTOS_ERROR: // when the update endpoint returns an error.
+      return {
+        ...state,
+        apiActions: {
+          loading: false,
+          error: payload,
+          success: '',
+        },
+      };
+    case GET_ALL_PHOTOS_SUCCESS:
+      return {
+        ...state,
+        apiActions: {
+          loading: false,
+          error: '',
+          success: '',
+        },
+        allPhotos: payload,
       };
 
     default:

@@ -3,6 +3,9 @@ import {
   GET_USERS_LOADING,
   GET_USERS_ERROR,
   GET_USERS_SUCCESS,
+  GET_ALBUM_BY_USERS_LOADING,
+  GET_ALBUM_BY_USERS_ERROR,
+  GET_ALBUM_BY_USERS_SUCCESS
 } from './album.types';
 
 /**
@@ -16,6 +19,7 @@ const INITIAL_STATE = {
     success: '',
   },
   listUsers: null,
+  albumByUser: null
 };
 
 /**
@@ -54,6 +58,35 @@ const albumReducer = (state = INITIAL_STATE, {type, payload}) => {
           success: '',
         },
         listUsers: payload,
+      };
+    case GET_ALBUM_BY_USERS_LOADING: // when the update endpoint is being called.
+      return {
+        ...state,
+        apiActions: {
+          loading: true,
+          error: '',
+          success: '',
+        },
+      };
+
+    case GET_ALBUM_BY_USERS_ERROR: // when the update endpoint returns an error.
+      return {
+        ...state,
+        apiActions: {
+          loading: false,
+          error: payload,
+          success: '',
+        },
+      };
+    case GET_ALBUM_BY_USERS_SUCCESS:
+      return {
+        ...state,
+        apiActions: {
+          loading: false,
+          error: '',
+          success: '',
+        },
+        albumByUser: payload,
       };
 
     default:

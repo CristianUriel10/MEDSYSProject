@@ -14,3 +14,6 @@ export const getSuccessStatus = state =>
 
 export const getListUsers = state =>
   state.AlbumReducer?.listUsers;
+
+export const getAlbumByUsers = state =>
+  state.AlbumReducer?.albumByUser;

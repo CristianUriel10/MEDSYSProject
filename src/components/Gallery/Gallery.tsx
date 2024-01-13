@@ -22,7 +22,7 @@ import {
   getLoadingStatus,
 } from '../../redux/Album/album.selectors';
 
-const Gallery: React.FC = ({id, setActiveGallery}) => {
+const Gallery: React.FC = ({id, title, setActiveGallery}) => {
   const dispatch = useDispatch();
   const albumPhotos = useSelector(getAlbumPhotos);
   const allPhotos = useSelector(getAllPhotos);
@@ -80,8 +80,11 @@ const Gallery: React.FC = ({id, setActiveGallery}) => {
             fontWeight: '600',
             paddingBottom: 20,
             marginTop: 70,
-          }}>
-          All photos
+            width: '70%',
+            overflow: 'hidden',
+          }}
+          numberOfLines={1}>
+          {allPhotosActive ? 'All photos' : title}
         </Text>
         <TouchableOpacity
           onPress={() => {
@@ -99,7 +102,11 @@ const Gallery: React.FC = ({id, setActiveGallery}) => {
           />
         </TouchableOpacity>
       </View>
-      {loading ? <Text style={{textAlign: 'center', fontSize: 30}}>Loading........</Text> : <ScrollView>{rows}</ScrollView>}
+      {loading ? (
+        <Text style={{textAlign: 'center', fontSize: 30}}>Loading........</Text>
+      ) : (
+        <ScrollView>{rows}</ScrollView>
+      )}
     </View>
   );
 };
@@ -108,13 +115,11 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
   },
   image: {
-    width: '30%',
-    height: 100,
+    width: '33%',
+    height: 120,
     resizeMode: 'cover',
-    borderRadius: 8,
   },
   image2: {
     width: 20,

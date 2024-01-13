@@ -35,6 +35,7 @@ const Main: React.FC = () => {
   const loading = useSelector(getLoadingStatus);
   const [activeGallery, setActiveGallery] = useState(false);
   const [idGallery, setIdGallery] = useState('');
+  const [titleGallery, setTitleGallery] = useState('');
 
   useEffect(() => {
     dispatch(actionGetUsers());
@@ -47,15 +48,16 @@ const Main: React.FC = () => {
     setOpenSectionId(prevId => (prevId === userId ? null : userId));
   };
 
-  const moveToGallery = (id: string) => {
+  const moveToGallery = (id: string, title: string) => {
     setActiveGallery(true);
     setIdGallery(id);
+    setTitleGallery(title);
   };
 
   return (
     <View style={{height: '100%'}}>
       {activeGallery ? (
-        <Gallery id={idGallery} setActiveGallery={setActiveGallery} />
+        <Gallery id={idGallery} title={titleGallery} setActiveGallery={setActiveGallery} />
       ) : (
         <ScrollView>
           <View
@@ -93,7 +95,7 @@ const Main: React.FC = () => {
                 ) : (
                   albumByUSer?.map((item: Album) => (
                     <TouchableOpacity
-                      onPress={() => moveToGallery(item.id)}
+                      onPress={() => moveToGallery(item.id, item.title)}
                       key={item.id}
                       style={{
                         borderColor: 'black',

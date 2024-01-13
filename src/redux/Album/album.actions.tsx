@@ -9,7 +9,7 @@ import {
 import {getUsers} from './album.api';
 
 // Biometrics Status
-export const actionBiometricsStatus = () => async dispatch => {
+export const actionGetUsers = () => async dispatch => {
   dispatch({
     type: GET_USERS_LOADING,
   });

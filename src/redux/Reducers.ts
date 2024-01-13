@@ -1,9 +1,10 @@
-// Libraries.
-import {combineReducers} from 'redux';
-import loginReducer from './Album/album.reducer';
+// src/redux/Reducers.js
+import { combineReducers } from 'redux';
+import albumReducer from './Album/album.reducer';
 
-// Reducers.
-loginReducer
+const rootReducer = combineReducers({
+  // Add other reducers as needed
+  AlbumReducer: albumReducer,
+});
 
-// Combine reducers.
-export default combineReducers({loginReducer});
+export default rootReducer;

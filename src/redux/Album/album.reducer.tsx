@@ -24,7 +24,7 @@ const INITIAL_STATE = {
  * @param {string} type action to take.
  * @param {Object} payload response for a action.
  */
-const loginReducer = (state = INITIAL_STATE, {type, payload}) => {
+const albumReducer = (state = INITIAL_STATE, {type, payload}) => {
   switch (type) {
     case GET_USERS_LOADING: // when the update endpoint is being called.
       return {
@@ -61,4 +61,4 @@ const loginReducer = (state = INITIAL_STATE, {type, payload}) => {
   }
 };
 
-export default loginReducer;
+export default albumReducer;

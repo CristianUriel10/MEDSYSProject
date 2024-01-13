@@ -1,12 +1,7 @@
-import {Navigation} from 'react-native-navigation';
-
+import { Navigation } from 'react-native-navigation';
+import { Provider } from 'react-redux';
 import Main from './Main/Main/Main';
 
-export function registerScreens(store, provider) {
-  Navigation.registerComponentWithRedux(
-    'Main',
-    () => Main,
-    provider,
-    store,
-  );
+export function registerScreens(store) {
+  Navigation.registerComponentWithRedux('Main', () => Main, Provider, store);
 }

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import Collapsible from 'react-native-collapsible';
+import {Navigation} from 'react-native-navigation';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Actions
-import { actionGetUsers, actionGetAlbumsByUser } from '../../../redux/Album/album.actions';
+import { actionGetUsers, actionGetAlbumsByUser } from '../../redux/Album/album.actions';
 
 // Selectors
-import { getListUsers, getAlbumByUsers, getLoadingStatus } from '../../../redux/Album/album.selectors';
+import { getListUsers, getAlbumByUsers, getLoadingStatus } from '../../redux/Album/album.selectors';
 
 interface User {
   id: string;
@@ -19,7 +20,7 @@ interface Album {
   title: string;
 }
 
-const Main: React.FC = () => {
+const Main: React.FC = (props) => {
   const dispatch = useDispatch();
   const listUser = useSelector(getListUsers);
   const albumByUSer = useSelector(getAlbumByUsers);
@@ -36,6 +37,20 @@ const Main: React.FC = () => {
     setOpenSectionId((prevId) => (prevId === userId ? null : userId));
   };
 
+  const moveToGallery = (id: string) => {
+    console.log(id);
+    Navigation.push(props.componentId, {
+      component: {
+        name: 'Gallery',
+        options: {
+          topBar: {
+            visible: false,
+          },
+        },
+      },
+    });
+  };
+
   return (
     <ScrollView>
       <View style={{ borderColor: 'black', borderStyle: 'solid', borderWidth: 1, padding: 20 }}>
@@ -47,12 +62,12 @@ const Main: React.FC = () => {
             <Text style={{ fontSize: 23, fontWeight: '600' }}>{item.name}</Text>
           </TouchableOpacity>
 
-          <Collapsible collapsed={openSectionId !== item.id} style={{marginLeft: 100}}>
+          <Collapsible collapsed={openSectionId !== item.id} style={{marginLeft: 50}}>
             {loading ? <Text>Cargando....</Text> :
             albumByUSer?.map((item: Album) => (
-              <View key={item.id} style={{ borderColor: 'black', borderStyle: 'solid', borderWidth: .4, padding: 5 }}>
+              <TouchableOpacity onPress={() => moveToGallery(item.id)} key={item.id} style={{ borderColor: 'black', borderStyle: 'solid', borderWidth: .4, padding: 5 }}>
                 <Text>{item.title}</Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </Collapsible>
         </View>

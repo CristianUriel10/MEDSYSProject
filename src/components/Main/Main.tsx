@@ -1,7 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from 'react-native';
 import Collapsible from 'react-native-collapsible';
-import {Navigation} from 'react-native-navigation';
 import {useDispatch, useSelector} from 'react-redux';
 import Gallery from '../Gallery/Gallery';
 
@@ -37,8 +44,49 @@ const Main: React.FC = () => {
   const [idGallery, setIdGallery] = useState('');
   const [titleGallery, setTitleGallery] = useState('');
 
+  const [myArray, setMyArray] = useState([]);
+
+  const saveArrayData = async newItemId => {
+    try {
+      // Agregar el nuevo elemento con el ID proporcionado
+      const newItem = {id: newItemId, value: 'Nuevo elemento'};
+
+      // Actualizar el array con el nuevo elemento
+      const updatedArray = [...myArray, newItem];
+
+      // Guardar el array actualizado en AsyncStorage
+      await AsyncStorage.setItem('myArrayKey', JSON.stringify(updatedArray));
+
+      // Actualizar el estado local con el nuevo array
+      setMyArray(updatedArray);
+
+      console.log('Array actualizado y guardado con éxito:', updatedArray);
+    } catch (error) {
+      console.error('Error al guardar el array:', error);
+    }
+  };
+
+  const getArrayData = async () => {
+    try {
+      // Recuperar el array desde AsyncStorage
+      const jsonData = await AsyncStorage.getItem('myArrayKey');
+
+      if (jsonData !== null) {
+        // Parsear el JSON y actualizar el estado local con el array recuperado
+        const data = JSON.parse(jsonData);
+        setMyArray(data);
+        console.log('Array recuperado con éxito:', data);
+      } else {
+        console.log('No se encontró ningún array almacenado.');
+      }
+    } catch (error) {
+      console.error('Error al recuperar el array:', error);
+    }
+  };
+
   useEffect(() => {
     dispatch(actionGetUsers());
+    getArrayData();
   }, [dispatch]);
 
   const [openSectionId, setOpenSectionId] = useState<string | null>(null);
@@ -57,7 +105,11 @@ const Main: React.FC = () => {
   return (
     <View style={{height: '100%'}}>
       {activeGallery ? (
-        <Gallery id={idGallery} title={titleGallery} setActiveGallery={setActiveGallery} />
+        <Gallery
+          id={idGallery}
+          title={titleGallery}
+          setActiveGallery={setActiveGallery}
+        />
       ) : (
         <ScrollView>
           <View
@@ -93,19 +145,39 @@ const Main: React.FC = () => {
                 {loading ? (
                   <Text>Loading....</Text>
                 ) : (
-                  albumByUSer?.map((item: Album) => (
-                    <TouchableOpacity
-                      onPress={() => moveToGallery(item.id, item.title)}
-                      key={item.id}
-                      style={{
-                        borderColor: 'black',
-                        borderStyle: 'solid',
-                        borderWidth: 0.4,
-                        padding: 5,
-                      }}>
-                      <Text>{item.title}</Text>
-                    </TouchableOpacity>
-                  ))
+                  albumByUSer
+                    ?.filter(
+                      elemento =>
+                        !myArray.some(album => album?.id === elemento.id),
+                    )
+                    .map((item: Album) => (
+                      <View
+                        key={item.id}
+                        style={{
+                          borderColor: 'black',
+                          borderStyle: 'solid',
+                          borderWidth: 0.4,
+                          padding: 5,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <TouchableOpacity
+                          onPress={() => moveToGallery(item.id, item.title)}
+                          style={{width: '90%'}}>
+                          <Text>{item.title}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          onPress={() => saveArrayData(item.id)}>
+                          <Image
+                            style={styles.image2}
+                            source={{
+                              uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Flat_minus_icon.svg/768px-Flat_minus_icon.svg.png',
+                            }}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    ))
                 )}
               </Collapsible>
             </View>
@@ -115,5 +187,14 @@ const Main: React.FC = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  image2: {
+    width: 20,
+    height: 20,
+    resizeMode: 'cover',
+    marginRight: 10,
+  },
+});
 
 export default Main;

@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  ScrollView,
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import {ScrollView, View, Text, Image, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 // Actions
@@ -22,7 +15,16 @@ import {
   getLoadingStatus,
 } from '../../redux/Album/album.selectors';
 
-const Gallery: React.FC = ({id, title, setActiveGallery}) => {
+// Styles
+import {styles} from './styles';
+
+interface GalleryProps {
+  id: string; // Adjust the type of id based on your actual data type
+  title: string; // Adjust the type of title based on your actual data type
+  setActiveGallery: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Gallery: React.FC<GalleryProps> = ({id, title, setActiveGallery}) => {
   const dispatch = useDispatch();
   const albumPhotos = useSelector(getAlbumPhotos);
   const allPhotos = useSelector(getAllPhotos);
@@ -32,7 +34,7 @@ const Gallery: React.FC = ({id, title, setActiveGallery}) => {
 
   useEffect(() => {
     dispatch(actionGetAlbumPhotos(id));
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   const numRows = Math.ceil(albumPhotos?.length / 3);
 
@@ -41,22 +43,32 @@ const Gallery: React.FC = ({id, title, setActiveGallery}) => {
       {allPhotosActive
         ? allPhotos
             ?.slice(rowIndex * 3, rowIndex * 3 + 3)
-            .map((source, index) => (
-              <Image
-                key={index}
-                source={{uri: source?.thumbnailUrl}}
-                style={styles.image}
-              />
-            ))
+            .map(
+              (
+                source: {thumbnailUrl: any},
+                index: React.Key | null | undefined,
+              ) => (
+                <Image
+                  key={index}
+                  source={{uri: source?.thumbnailUrl}}
+                  style={styles.image}
+                />
+              ),
+            )
         : albumPhotos
             ?.slice(rowIndex * 3, rowIndex * 3 + 3)
-            .map((source, index) => (
-              <Image
-                key={index}
-                source={{uri: source?.thumbnailUrl}}
-                style={styles.image}
-              />
-            ))}
+            .map(
+              (
+                source: {thumbnailUrl: any},
+                index: React.Key | null | undefined,
+              ) => (
+                <Image
+                  key={index}
+                  source={{uri: source?.thumbnailUrl}}
+                  style={styles.image}
+                />
+              ),
+            )}
     </View>
   ));
 
@@ -65,7 +77,7 @@ const Gallery: React.FC = ({id, title, setActiveGallery}) => {
       <View style={styles.ratingContainer}>
         <TouchableOpacity
           onPress={() => setActiveGallery(false)}
-          style={{paddingBottom: 20, marginTop: 70, paddingLeft: 10}}>
+          style={styles.touchable}>
           <Image
             style={styles.image2}
             source={{
@@ -73,17 +85,7 @@ const Gallery: React.FC = ({id, title, setActiveGallery}) => {
             }}
           />
         </TouchableOpacity>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 20,
-            fontWeight: '600',
-            paddingBottom: 20,
-            marginTop: 70,
-            width: '70%',
-            overflow: 'hidden',
-          }}
-          numberOfLines={1}>
+        <Text style={styles.titleText} numberOfLines={1}>
           {allPhotosActive ? 'All photos' : title}
         </Text>
         <TouchableOpacity
@@ -91,7 +93,7 @@ const Gallery: React.FC = ({id, title, setActiveGallery}) => {
             setAllPhotosActive(!allPhotosActive);
             dispatch(actionGetAllPhotos());
           }}
-          style={{paddingBottom: 20, marginTop: 70, paddingRight: 10}}>
+          style={styles.touchable}>
           <Image
             style={styles.image2}
             source={{
@@ -103,33 +105,12 @@ const Gallery: React.FC = ({id, title, setActiveGallery}) => {
         </TouchableOpacity>
       </View>
       {loading ? (
-        <Text style={{textAlign: 'center', fontSize: 30}}>Loading........</Text>
+        <Text style={styles.text}>Loading........</Text>
       ) : (
         <ScrollView>{rows}</ScrollView>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  image: {
-    width: '33%',
-    height: 120,
-    resizeMode: 'cover',
-  },
-  image2: {
-    width: 20,
-    height: 20,
-    resizeMode: 'cover',
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});
 
 export default Gallery;

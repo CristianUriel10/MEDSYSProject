@@ -1,13 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-} from 'react-native';
+import {ScrollView, View, Text, TouchableOpacity, Image} from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import {useDispatch, useSelector} from 'react-redux';
 import Gallery from '../Gallery/Gallery';
@@ -24,6 +17,9 @@ import {
   getAlbumByUsers,
   getLoadingStatus,
 } from '../../redux/Album/album.selectors';
+
+// Styles
+import {styles} from './styles';
 
 interface User {
   id: string;
@@ -112,13 +108,7 @@ const Main: React.FC = () => {
         />
       ) : (
         <ScrollView>
-          <View
-            style={{
-              borderColor: 'black',
-              borderStyle: 'solid',
-              borderWidth: 1,
-              padding: 20,
-            }}>
+          <View style={styles.titleContainer}>
             <Text
               style={{textAlign: 'center', fontSize: 20, fontWeight: '600'}}>
               Users
@@ -128,15 +118,8 @@ const Main: React.FC = () => {
             <View key={item.id}>
               <TouchableOpacity
                 onPress={() => toggleCollapse(item.id)}
-                style={{
-                  borderColor: 'black',
-                  borderStyle: 'solid',
-                  borderWidth: 0.4,
-                  padding: 5,
-                }}>
-                <Text style={{fontSize: 23, fontWeight: '600'}}>
-                  {item.name}
-                </Text>
+                style={styles.touchable}>
+                <Text style={styles.text}>{item.name}</Text>
               </TouchableOpacity>
 
               <Collapsible
@@ -151,16 +134,7 @@ const Main: React.FC = () => {
                         !myArray.some(album => album?.id === elemento.id),
                     )
                     .map((item: Album) => (
-                      <View
-                        key={item.id}
-                        style={{
-                          borderColor: 'black',
-                          borderStyle: 'solid',
-                          borderWidth: 0.4,
-                          padding: 5,
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                        }}>
+                      <View key={item.id} style={styles.albumUser}>
                         <TouchableOpacity
                           onPress={() => moveToGallery(item.id, item.title)}
                           style={{width: '90%'}}>
@@ -187,14 +161,5 @@ const Main: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  image2: {
-    width: 20,
-    height: 20,
-    resizeMode: 'cover',
-    marginRight: 10,
-  },
-});
 
 export default Main;
